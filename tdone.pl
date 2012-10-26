@@ -86,14 +86,14 @@ given ($action) {
 
   > tdone.pl list
   > tdone.pl add +++ some very important task @office :project
-  > tdone.pl ++ some slightly important tast @office :meeting
+  > tdone.pl ++ some slightly important task @office :meeting
   > tdone.pl get milk @store :food :grocieres 
   > tdone.pl list
   0: +++ some very important task @office :project
-  1: ++ some slightly important tast @office :meeting
+  1: ++ some slightly important task @office :meeting
   2: get milk @store :food :grocieres
   > tdone.pl did 2 0
   > tdone.pl
-  0: ++ some slightly important tast @office :meeting
+  0: ++ some slightly important task @office :meeting
 
   
