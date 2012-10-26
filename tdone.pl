@@ -24,7 +24,7 @@ given ($action) {
   when ('list') { print LIST }
   when ('add' ) { push @tasks, join ' ', @ARGV; }
   when ('did' ) { delete $tasks[$_] for reverse sort @ARGV; }
-  when ('find') { my $match = shift @ARGV; print grep{/$match/} LIST }
+  when ('find') { my $match = join ' ', @ARGV; print grep{/$match/} LIST }
   when ('edit') { exec $ENV{VISUAL} || $ENV{EDITOR}, $ENV{TDONE_FILE}; }
   default       { qx{perldoc $0}   } # USAGE
 }
@@ -91,6 +91,8 @@ given ($action) {
   > tdone.pl list
   0: +++ some very important task @office :project
   1: ++ some slightly important task @office :meeting
+  2: get milk @store :food :grocieres
+  > tdone.pl find :food
   2: get milk @store :food :grocieres
   > tdone.pl did 2 0
   > tdone.pl
