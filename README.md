@@ -40,6 +40,8 @@
     0: +++ some very important task @office :project
     1: ++ some slightly important task @office :meeting
     2: get milk @store :food :grocieres
+    > tdone.pl find :food
+    2: get milk @store :food :grocieres
     > tdone.pl did 2 0
     > tdone.pl
     0: ++ some slightly important task @office :meeting
