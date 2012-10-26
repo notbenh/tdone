@@ -26,28 +26,22 @@
 
 **edit** : open up the file in what ever your evniroment states as your prefered editor
 
-=back
-
 ## SYNTAX
-
-=over
 
 **priority** is determined by the number of +'s at the start of a task.
 
-=back
-
 ## EXAMPES
 
-  > tdone.pl list
-  > tdone.pl add +++ some very important task @office :project
-  > tdone.pl ++ some slightly important task @office :meeting
-  > tdone.pl get milk @store :food :grocieres 
-  > tdone.pl list
-  0: +++ some very important task @office :project
-  1: ++ some slightly important task @office :meeting
-  2: get milk @store :food :grocieres
-  > tdone.pl did 2 0
-  > tdone.pl
-  0: ++ some slightly important task @office :meeting
+    > tdone.pl list
+    > tdone.pl add +++ some very important task @office :project
+    > tdone.pl ++ some slightly important task @office :meeting
+    > tdone.pl get milk @store :food :grocieres 
+    > tdone.pl list
+    0: +++ some very important task @office :project
+    1: ++ some slightly important task @office :meeting
+    2: get milk @store :food :grocieres
+    > tdone.pl did 2 0
+    > tdone.pl
+    0: ++ some slightly important task @office :meeting
 
   
