@@ -6,7 +6,6 @@ use Tie::File;
 use v5.10;   
 
 my @tasks;
-D {FILE => $ENV{TDONE_FILE}};
 tie @tasks, 'Tie::File', $ENV{TDONE_FILE} or die qq{TDONE_FILE not specified in env: $! $@};
 
 sub LIST {
@@ -31,6 +30,10 @@ given ($action) {
 }
 
 
-D [sort{ my ($x)=$a=~m/^([+]*)/; my($y)=$b=~m/^([+]*)/; length($x)<=>length($y)} @tasks];
-@tasks = grep{length} @tasks; # clean up any blank lines
-# write
+# float more +'s up to the top as a marker for priority
+@tasks = sort{ my ($x)=$a=~m/^([+]*)/; my($y)=$b=~m/^([+]*)/; length($y)<=>length($x)} @tasks;
+
+# clean up any blank lines
+@tasks = grep{length} @tasks; 
+
+# write happens when goes out of scope
