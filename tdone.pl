@@ -14,7 +14,7 @@ sub LIST {
   map{sprintf $fmt, $i++, $_} @tasks;
 }
 
-my @actions = qw{add list done find edit};
+my @actions = qw{add list did find edit};
 my $action  = @ARGV == 0           ? 'list'
             : $ARGV[0] ~~ @actions ? shift
             :                        'add'
@@ -23,7 +23,7 @@ my $action  = @ARGV == 0           ? 'list'
 given ($action) {
   when ('list') { print LIST }
   when ('add' ) { push @tasks, join ' ', @ARGV; }
-  when ('done') { delete $tasks[$_] for reverse sort @ARGV; }
+  when ('did' ) { delete $tasks[$_] for reverse sort @ARGV; }
   when ('find') { my $match = shift @ARGV; print grep{/$match/} LIST }
   when ('edit') { exec $ENV{VISUAL} || $ENV{EDITOR}, $ENV{TDONE_FILE}; }
   default       { qx{perldoc $0}   } # USAGE
