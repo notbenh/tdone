@@ -1,17 +1,28 @@
 #!/usr/bin/perl 
 use strict;
 use warnings;
-use Data::Dumper; sub D(@){ warn Dumper(@_) };
 use Tie::File;
+use Term::ANSIColor qw(:constants);
 use v5.10;   
 
 my @tasks;
 tie @tasks, 'Tie::File', $ENV{TDONE_FILE} or die qq{TDONE_FILE not specified in env: $! $@};
 
 sub LIST {
-  my $fmt = sprintf qq{%% %ds: %%s\n}, length( scalar( @tasks ));
+  my $BW  = BOLD WHITE;
+  my $ID  = BRIGHT_BLACK;
+  my $PRI = BOLD BRIGHT_RED;
+  my $LOC = BOLD WHITE;
+  my $TAG = BRIGHT_GREEN;
+  my $R  = RESET;
+  my $fmt = sprintf qq{$ID%% %ds:$R %%s\n}, length( scalar( @tasks ));
   my $i;
-  map{sprintf $fmt, $i++, $_} @tasks;
+  map{ my $task = $_; # pull copy for display
+       $task =~ s/^([+]*)/$PRI$1$R/;
+       $task =~ s/([@]\w+)/$LOC$1$R/g;
+       $task =~ s/([:]\w+)/$TAG$1$R/g;
+       sprintf $fmt, $i++, $task
+     } @tasks;
 }
 
 my @actions = qw{add list did find edit};
