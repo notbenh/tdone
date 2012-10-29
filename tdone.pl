@@ -25,7 +25,7 @@ sub LIST {
      } @tasks;
 }
 
-my @actions = qw{add list did find edit};
+my @actions = qw{add list did find edit next};
 my $action  = @ARGV == 0           ? 'list'
             : $ARGV[0] ~~ @actions ? shift
             :                        'add'
@@ -37,6 +37,7 @@ given ($action) {
   when ('did' ) { delete $tasks[$_] for reverse sort @ARGV; }
   when ('find') { my $match = join ' ', @ARGV; print grep{/$match/} LIST }
   when ('edit') { exec $ENV{VISUAL} || $ENV{EDITOR}, $ENV{TDONE_FILE}; }
+  when ('next') { my ($next) = LIST; print $next; }
   default       { qx{perldoc $0}   } # USAGE
 }
 
@@ -47,7 +48,7 @@ given ($action) {
 # clean up any blank lines
 @tasks = grep{length} @tasks; 
 
-# write happens when goes out of scope
+# write happens when @tasks goes out of scope
 
 =head1 NAME 
 
