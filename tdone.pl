@@ -25,7 +25,12 @@ sub LIST {
      } @tasks;
 }
 
-my @actions = qw{add list did find edit next};
+sub FIND {
+  my $match = join ' ', @_;
+  return grep{/$match/} LIST 
+}
+
+my @actions = qw{at add list did find edit next};
 my $action  = @ARGV == 0           ? 'list'
             : $ARGV[0] ~~ @actions ? shift
             :                        'add'
@@ -35,7 +40,8 @@ given ($action) {
   when ('list') { print LIST }
   when ('add' ) { push @tasks, join ' ', @ARGV; }
   when ('did' ) { delete $tasks[$_] for reverse sort @ARGV; }
-  when ('find') { my $match = join ' ', @ARGV; print grep{/$match/} LIST }
+  when ('at'  ) { print FIND(sprintf q{\@%s\b}, $ARGV[0]); }
+  when ('find') { print FIND(@ARGV) }
   when ('edit') { exec $ENV{VISUAL} || $ENV{EDITOR}, $ENV{TDONE_FILE}; }
   when ('next') { my ($next) = LIST; print $next; }
   default       { qx{perldoc $0}   } # USAGE
