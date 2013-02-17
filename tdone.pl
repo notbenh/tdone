@@ -3,6 +3,7 @@ use strict;
 use warnings;
 use Tie::File;
 use Term::ANSIColor qw(:constants);
+use Scalar::Util qw{looks_like_number};
 use v5.10;   
 
 my @tasks;
@@ -39,7 +40,7 @@ my $action  = @ARGV == 0           ? 'list'
 given ($action) {
   when ('list') { print LIST }
   when ('add' ) { push @tasks, join ' ', @ARGV; }
-  when ('did' ) { delete $tasks[$_] for reverse sort @ARGV; }
+  when ('did' ) { delete $tasks[$_] for reverse sort grep{looks_like_number $_} @ARGV; } # do in bottom up as to not bother the ordering
   when ('at'  ) { print FIND(sprintf q{\@%s\b}, $ARGV[0]); }
   when ('find') { print FIND(@ARGV) }
   when ('edit') { exec $ENV{VISUAL} || $ENV{EDITOR}, $ENV{TDONE_FILE}; }
