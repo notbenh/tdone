@@ -117,4 +117,28 @@ given ($action) {
   > tdone.pl
   0: ++ some slightly important task @office :meeting
 
-  
+=head2 ADVANCED TIPS
+
+So because this is as simple as it get's I am not going to impliment anything
+like projects. Though that does not imply that you are stuck putting
+everything in to a single massive file (yuk!). Remember that the todo list
+file is just an evniroment var thus you can always do this: 
+
+  > TDONE_FILE=~/.tdone/project_foo tdone ++ make this todo list thing simpler
+  > TDONE_FILE=~/.tdone/project_foo tdone 
+  0: ++ make this todo list thing simpler
+
+But that's still a bit to type so just alias it away: 
+
+  alias foo='TDONE_FILE=~/.tdone/project_foo tdone'
+  > foo did 0
+  > foo ++ setup :gh_pages for project :foo @laptop
+  > foo
+  0: ++ setup :gh_pages for project :foo @laptop
+
+Another handy one is : 
+
+  > alias bug='TDONE_FILE=./bugs tdone'
+  > cd ~/git/project_foo
+  > bug +++ login with empty :password causes user to :delete there account!
+
