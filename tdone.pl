@@ -31,7 +31,7 @@ sub FIND {
   return grep{/$match/} LIST 
 }
 
-my @actions = qw{at add list did find edit next};
+my @actions = qw{at tag add list did find edit next};
 my $action  = @ARGV == 0           ? 'list'
             : $ARGV[0] ~~ @actions ? shift
             :                        'add'
@@ -42,6 +42,7 @@ given ($action) {
   when ('add' ) { push @tasks, join ' ', @ARGV; }
   when ('did' ) { delete $tasks[$_] for reverse sort grep{looks_like_number $_} @ARGV; } # do in bottom up as to not bother the ordering
   when ('at'  ) { print FIND(sprintf q{\@%s\b}, $ARGV[0]); }
+  when ('tag' ) { print FIND(sprintf q{:%s\b}, $ARGV[0]); }
   when ('find') { print FIND(@ARGV) }
   when ('edit') { exec $ENV{VISUAL} || $ENV{EDITOR}, $ENV{TDONE_FILE}; }
   when ('next') { my ($next) = LIST; print $next; }
@@ -78,6 +79,23 @@ given ($action) {
 
 =back
 
+=head2 SYNTAX
+
+=over
+
+=item B<priority> is determined by the number of +'s at the start of a task.
+For example +++ is more imporant then + and when you view your list it will be
+sorted for you with the highest priority first.
+
+=item B<tags> are intended to be preceeded with a colon (:), though is just
+used for coloring when displaying the list of tasks. There is a provided verb
+(tag) that will only look for words that begin with :.
+
+=item B<locaiton> is marked with an apetail/at sign (@). There is a provided
+verb (at) that will only look for words that begin with @.
+
+=back
+
 =head2 VERBS
 
 =over
@@ -88,19 +106,16 @@ given ($action) {
 
 =item B<did>  : remove a task from the file, takes any number of id's from list
 
-=item B<find> : search file for based on a given regular expression
+=item B<find> : search file for a given string (treated as a regular expression)
+
+=item B<at>   : search file for a given location (treated as a regular expression)
+
+=item B<tag> : search file for a given tag (treated as a regular expression)
 
 =item B<edit> : open up the file in what ever your evniroment states as your prefered editor
 
 =back
 
-=head2 SYNTAX
-
-=over
-
-=item B<priority> is determined by the number of +'s at the start of a task.
-
-=back
 
 =head2 EXAMPES
 
@@ -112,8 +127,13 @@ given ($action) {
   0: +++ some very important task @office :project
   1: ++ some slightly important task @office :meeting
   2: get milk @store :food :grocieres
-  > tdone.pl find :food
+  > tdone.pl find important
+  0: +++ some very important task @office :project
+  1: ++ some slightly important task @office :meeting
+  > tdone.pl tag food
   2: get milk @store :food :grocieres
+  > tdone.pl at office
+  1: ++ some slightly important task @office :meeting
   > tdone.pl did 2 0
   > tdone.pl
   0: ++ some slightly important task @office :meeting
@@ -166,3 +186,31 @@ Another handy one for bugtracking is :
 
 Lastly becase these are just simple text files I have them all stored in my
 DropBox folder so syncing is doine and I get access via all my devices.
+
+=head2 POSSIBLE CHANGES IN FUTURE VERSIONS
+
+Currently I have provided the verbs B<list> and B<add> to be explict though I
+personaly never use them as the code already can infer them. There is also the
+possible issue of them being expected for the task in the case of no priority
+given:
+
+  tdone.pl add add a :feature to the site @office
+
+Though the same can be said for all of the other verbs. I have been thinking
+about how to resolve this issue and so far the only I<clean> way I can think of
+is to completely remove all verbs. The B<find> verbs can be done by aliasing with
+something like ack or grep, but they will have to be there own words at that
+point. In the case of B<edit>, and B<did> it become complex as the TDONE_FILE
+is harder to infer for the right action to result.
+
+The alternate in these cases would be to result to using flagged options,
+B<-e> for example in the case of B<edit>) as a way to resolve the syntax
+issues but I find this a bit ugly but it is reliable. Thus be warned that at
+some point there might be an alternate version that changes the syntax. In
+either case I will likely save this off as tdone2.pl and leave it to the user
+to pick which version they will prefer. 
+
+=head2 GOT FEEDBACK?
+
+Love it? Hate it? Want to see something changed? Feel free to use the issue
+tracker to let me know.
