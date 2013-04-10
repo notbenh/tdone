@@ -69,11 +69,12 @@ given ($action) {
 
 =over
 
-=item 1: Put tdone.pl some where in your PATH
+=item 1: have a version of perl installed >= 5.10 (unsure use: perl -v)
 
-=item 2: Touch a file and then set TDONE_FILE in your enviroment
+=item 2: Put tdone.pl some where in your PATH
 
-=item 3: done =)
+=item 3: set TDONE_FILE in your enviroment to a file like ~/.tdone_list
+
 
 =back
 
@@ -124,17 +125,35 @@ like projects. Though that does not imply that you are stuck putting
 everything in to a single massive file (yuk!). Remember that the todo list
 file is just an evniroment var thus you can always do this: 
 
+  > ln -s tdone.pl tdone
   > TDONE_FILE=~/.tdone/project_foo tdone ++ make this todo list thing simpler
   > TDONE_FILE=~/.tdone/project_foo tdone 
   0: ++ make this todo list thing simpler
 
-But that's still a bit to type so just alias it away: 
+But that is ugly and a lot to type so just alias it away: 
 
   alias foo='TDONE_FILE=~/.tdone/project_foo tdone'
   > foo did 0
   > foo ++ setup :gh_pages for project :foo @laptop
   > foo
   0: ++ setup :gh_pages for project :foo @laptop
+
+This method also makes building shopping lists simple: 
+
+  > alias get='TDONE_FILE=./shopping tdone'
+  > get milk @grocery
+  > get plants @nursery
+  > get nails @hardware
+
+Then using the at filter becomes your location aware shopping list:
+
+  > get at grocery 
+  0: milk @grocery
+  > alias got='get did'
+  > got 0
+  > get
+  0: plants @nursery
+  1: nails @hardware
 
 Another handy one is : 
 
