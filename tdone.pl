@@ -120,19 +120,22 @@ given ($action) {
 
 =head2 ADVANCED TIPS
 
-So because this is as simple as it get's I am not going to impliment anything
+The first thing that did was remove the need for the .pl 
+
+  > ln -s tdone.pl tdone
+
+Then because this is as simple as it get's I am not going to impliment anything
 like projects. Though that does not imply that you are stuck putting
 everything in to a single massive file (yuk!). Remember that the todo list
 file is just an evniroment var thus you can always do this: 
 
-  > ln -s tdone.pl tdone
   > TDONE_FILE=~/.tdone/project_foo tdone ++ make this todo list thing simpler
   > TDONE_FILE=~/.tdone/project_foo tdone 
   0: ++ make this todo list thing simpler
 
 But that is ugly and a lot to type so just alias it away: 
 
-  alias foo='TDONE_FILE=~/.tdone/project_foo tdone'
+  > alias foo='TDONE_FILE=~/.tdone/project_foo tdone'
   > foo did 0
   > foo ++ setup :gh_pages for project :foo @laptop
   > foo
@@ -155,9 +158,11 @@ Then using the at filter becomes your location aware shopping list:
   0: plants @nursery
   1: nails @hardware
 
-Another handy one is : 
+Another handy one for bugtracking is : 
 
   > alias bug='TDONE_FILE=./bugs tdone'
   > cd ~/git/project_foo
   > bug +++ login with empty :password causes user to :delete there account!
 
+Lastly becase these are just simple text files I have them all stored in my
+DropBox folder so syncing is doine and I get access via all my devices.
