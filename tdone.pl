@@ -1,10 +1,12 @@
-#!/usr/bin/perl 
+#!/usr/bin/env perl 
 use strict;
 use warnings;
 use Tie::File;
 use Term::ANSIColor qw(:constants);
 use Scalar::Util qw{looks_like_number};
-use v5.10;   
+use v5.10;
+no if $] >= 5.018, 'warnings', map{qq{experimental::$_}} qw{smartmatch};
+my $VERSION = 2.0;
 
 my @tasks;
 tie @tasks, 'Tie::File', $ENV{TDONE_FILE} or die qq{TDONE_FILE not specified in env: $! $@};
