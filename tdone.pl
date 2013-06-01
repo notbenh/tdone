@@ -53,7 +53,16 @@ given ($action) {
 
 
 # float more +'s up to the top as a marker for priority
-@tasks = sort{ my ($x)=$a=~m/^([+]*)/; my($y)=$b=~m/^([+]*)/; length($y)<=>length($x)} @tasks;
+sub sub_score {my($x,$y)=@_; return 0.5 unless $x && $y; ($x cmp $y) * .4 + .5}
+@tasks = sort{ my $a_plus = $a =~ m/^([+]*)/ ? length($1) : 0;
+               my $a_loc  = $a =~ m/(\@\w+)/ ? $1 : '';
+               my $b_plus = $b =~ m/^([+]*)/ ? length($1) : 0;
+               my $b_loc  = $b =~ m/(\@\w+)/ ? $1 : '';
+               my $a_score= $a_plus + sub_score($a_loc,$b_loc);
+               my $b_score= $b_plus + sub_score($b_loc,$a_loc);
+               #warn "  A: $a_plus $a_loc => $a_score\n  B: $b_plus $b_loc => $b_score \n\n";
+               $b_score <=> $a_score;
+             } @tasks;
 
 # clean up any blank lines
 @tasks = grep{length} @tasks; 
