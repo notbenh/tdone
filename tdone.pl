@@ -33,23 +33,25 @@ sub FIND {
   return grep{/$match/} LIST 
 }
 
-my @actions = qw{at tag add list did find edit next};
-my $action  = @ARGV == 0           ? 'list'
-            : $ARGV[0] ~~ @actions ? shift
-            :                        'add'
-            ;
+my $actions = { 
+    list => sub{ print LIST}
+  , add  => sub{ push @tasks, join ' ', @_}
+  , did  => sub{ delete $tasks[$_] for reverse sort grep{looks_like_number $_} @_; } # do in bottom up as to not bother the ordering
+  , at   => sub{ print FIND(sprintf q{\@%s\b}, $_[0]); }
+  , tag  => sub{ print FIND(sprintf q{:%s\b}, $_[0]); }
+  , find => sub{ use Data::Dumper; warn Dumper(\@_);print FIND(@_) }
+  , edit => sub{ exec $ENV{VISUAL} || $ENV{EDITOR}, $ENV{TDONE_FILE}; }
+  , next => sub{ my ($next) = LIST; print $next; }
+  , help => sub{ qx{perldoc $0}   } # USAGE
+};
 
-given ($action) {
-  when ('list') { print LIST }
-  when ('add' ) { push @tasks, join ' ', @ARGV; }
-  when ('did' ) { delete $tasks[$_] for reverse sort grep{looks_like_number $_} @ARGV; } # do in bottom up as to not bother the ordering
-  when ('at'  ) { print FIND(sprintf q{\@%s\b}, $ARGV[0]); }
-  when ('tag' ) { print FIND(sprintf q{:%s\b}, $ARGV[0]); }
-  when ('find') { print FIND(@ARGV) }
-  when ('edit') { exec $ENV{VISUAL} || $ENV{EDITOR}, $ENV{TDONE_FILE}; }
-  when ('next') { my ($next) = LIST; print $next; }
-  default       { qx{perldoc $0}   } # USAGE
-}
+
+my $action  = @ARGV == 0           ? $actions->{list}->()
+            : $actions->{$ARGV[0]} ? do{ my $verb = shift @ARGV;
+                                         $actions->{$verb}->(@ARGV)
+                                       }
+            :                        $actions->{add}->(@ARGV)
+            ;
 
 
 # float more +'s up to the top as a marker for priority
