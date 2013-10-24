@@ -39,7 +39,7 @@ my $actions = {
   , did  => sub{ delete $tasks[$_] for reverse sort grep{looks_like_number $_} @_; } # do in bottom up as to not bother the ordering
   , at   => sub{ print FIND(sprintf q{\@%s\b}, $_[0]); }
   , tag  => sub{ print FIND(sprintf q{:%s\b}, $_[0]); }
-  , find => sub{ use Data::Dumper; warn Dumper(\@_);print FIND(@_) }
+  , find => sub{ print FIND(@_) }
   , edit => sub{ exec $ENV{VISUAL} || $ENV{EDITOR}, $ENV{TDONE_FILE}; }
   , next => sub{ my ($next) = LIST; print $next; }
   , help => sub{ qx{perldoc $0}   } # USAGE
