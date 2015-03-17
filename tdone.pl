@@ -23,7 +23,7 @@ sub LIST {
   map{ my $task = $_; # pull copy for display
        $task =~ s/^([+]*)/$PRI$1$R/;
        $task =~ s/([@]\w+)/$LOC$1$R/g;
-       $task =~ s/([:]\w+)/$TAG$1$R/g;
+       $task =~ s/(\s+[:]\w+)/$TAG$1$R/g;
        sprintf $fmt, $i++, $task
      } @tasks;
 }
@@ -38,7 +38,7 @@ my $actions = {
   , add  => sub{ push @tasks, join ' ', @_}
   , did  => sub{ delete $tasks[$_] for reverse sort grep{looks_like_number $_} @_; } # do in bottom up as to not bother the ordering
   , at   => sub{ print FIND(sprintf q{\@%s\b}, $_[0]); }
-  , tag  => sub{ print FIND(sprintf q{:%s\b}, $_[0]); }
+  , tag  => sub{ print FIND(sprintf q{\s+:%s\b}, $_[0]); }
   , find => sub{ print FIND(@_) }
   , edit => sub{ exec $ENV{VISUAL} || $ENV{EDITOR}, $ENV{TDONE_FILE}; }
   , next => sub{ my ($next) = LIST; print $next; }
