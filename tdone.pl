@@ -23,7 +23,7 @@ sub LIST {
   map{ my $task = $_; # pull copy for display
        $task =~ s/^([+]*)/$PRI$1$R/;
        $task =~ s/([@]\w+)/$LOC$1$R/g;
-       $task =~ s/([:]\w+)/$TAG$1$R/g;
+       $task =~ s/(\s+[:]\w+)/$TAG$1$R/g;
        sprintf $fmt, $i++, $task
      } @tasks;
 }
